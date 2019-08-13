@@ -11,7 +11,8 @@ namespace SA.BehaviorEditor
 {
     public class StateNode : BaseNode
     {
-        bool collapse;
+        public bool collapse;
+        bool previousCollapse;
         public State currentState;
         State previousState;
 
@@ -38,6 +39,11 @@ namespace SA.BehaviorEditor
             }
             currentState = (State)EditorGUILayout.ObjectField(currentState, typeof(State), false);
 
+            if (previousCollapse != collapse)
+            {
+                previousCollapse = collapse;
+                BehaviorEditor.currentGraph.SetStateNode(this);
+            }
             if (previousState != currentState)
             {
                 serializedState = null;

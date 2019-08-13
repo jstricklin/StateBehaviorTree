@@ -28,7 +28,7 @@ namespace SA.BehaviorEditor
             if (previousGraph != BehaviorEditor.currentGraph)
             {
                 previousGraph = BehaviorEditor.currentGraph;
-                //load graph
+                BehaviorEditor.LoadGraph();
             }
         }
         public override void DrawCurve()   

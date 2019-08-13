@@ -93,6 +93,20 @@ namespace SA.BehaviorEditor
                 {
                     // LeftClick(e);
                 }
+                if (e.type == EventType.MouseDrag)
+                {
+                    for (int i = 0; i < windows.Count; i++)
+                    {
+                        if (windows[i].windowRect.Contains(e.mousePosition))
+                        {
+                            if (currentGraph != null)
+                            {
+                                currentGraph.SetNode(windows[i]);
+                            }
+                            break;
+                        }
+                    }
+                }
             }
 
         }
@@ -290,6 +304,12 @@ namespace SA.BehaviorEditor
 
         public static void LoadGraph()
         {
+            windows.Clear();
+            windows.Add(graphNode);
+            if (currentGraph == null)
+            {
+                return;
+            }
             currentGraph.Init();
             List<Saved_StateNode> l = new List<Saved_StateNode>();
             l.AddRange(currentGraph.savedStateNodes);
@@ -299,6 +319,7 @@ namespace SA.BehaviorEditor
             {
                 StateNode s = AddStateNode(l[i].position);
                 s.currentState = l[i].state;
+                s.collapse = l[i].isCollapsed;
                 currentGraph.SetStateNode(s);
                 // Load our transitions
             }

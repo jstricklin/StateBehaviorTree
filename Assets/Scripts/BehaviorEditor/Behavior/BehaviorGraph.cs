@@ -17,6 +17,21 @@ namespace SA
             stateNodesDict.Clear();
             stateDict.Clear();
         }
+        public void SetNode(BaseNode node)
+        {
+            if (node is StateNode)
+            {
+                SetStateNode((StateNode)node);
+            }
+            if (node is TransitionNode)
+            {
+
+            }
+            if (node is TransitionNode)
+            {
+                
+            }
+        }
         #region StateNodes
         public void SetStateNode(StateNode node)
         {
@@ -29,6 +44,7 @@ namespace SA
             }
             s.state = node.currentState;
             s.position = new Vector2(node.windowRect.x, node.windowRect.y);
+            s.isCollapsed = node.collapse;
         }
 
         public void ClearStateNode(StateNode node)
@@ -61,6 +77,7 @@ namespace SA
     {
         public State state;
         public Vector2 position;
+        public bool isCollapsed;
 
     }
     [System.Serializable]
