@@ -10,7 +10,6 @@ namespace SA.BehaviorEditor
         BehaviorGraph previousGraph;
         public override void DrawWindow()
         {
-
             if (BehaviorEditor.currentGraph == null)
             {
                 EditorGUILayout.LabelField("Add Graph to modify:");

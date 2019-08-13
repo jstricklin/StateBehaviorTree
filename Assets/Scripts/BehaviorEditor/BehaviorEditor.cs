@@ -124,8 +124,8 @@ namespace SA.BehaviorEditor
             menu.AddSeparator("");
             if (currentGraph != null)
             {
-            menu.AddItem(new GUIContent("Add State"), false, ContextCallback, UserActions.addState);
-            menu.AddItem(new GUIContent("Add Comment"), false, ContextCallback, UserActions.commentNode);
+                menu.AddItem(new GUIContent("Add State"), false, ContextCallback, UserActions.addState);
+                menu.AddItem(new GUIContent("Add Comment"), false, ContextCallback, UserActions.commentNode);
 
             } else 
             {
@@ -214,6 +214,15 @@ namespace SA.BehaviorEditor
         #endregion
 
         #region HelperMethods
+        public static StateNode AddStateNode(Vector2 pos)
+        {
+            StateNode stateNode = CreateInstance<StateNode>();
+            stateNode.windowRect = new Rect(pos.x, pos.y, 200, 300);
+            stateNode.windowTitle = "State";
+            windows.Add(stateNode);
+            currentGraph.SetStateNode(stateNode);
+            return stateNode;
+        }
         public static CommentNode AddCommentNode(Vector2 pos)
         {
             CommentNode commentNode = CreateInstance<CommentNode>();
@@ -239,19 +248,10 @@ namespace SA.BehaviorEditor
             Vector2 pos = new Vector2(fromRect.x, fromRect.y);
             return AddTransitionNode(pos, transition, from);
         }
-        public static StateNode AddStateNode(Vector2 pos)
-        {
-            StateNode stateNode = new StateNode();
-            stateNode.windowRect = new Rect(pos.x, pos.y, 200, 300);
-            stateNode.windowTitle = "State";
-            windows.Add(stateNode);
-            currentGraph.SetStateNode(stateNode);
-            return stateNode;
-        }
 
         public static TransitionNode AddTransitionNode(Vector2 pos, Transition transition, StateNode from)
         {
-            TransitionNode transitionNode = new TransitionNode();
+            TransitionNode transitionNode = CreateInstance<TransitionNode>();
             transitionNode.Init(from, transition);
             transitionNode.windowRect = new Rect(pos.x, pos.y, 200, 80);
             transitionNode.windowTitle = "Condition Check";
@@ -295,7 +295,7 @@ namespace SA.BehaviorEditor
             l.AddRange(currentGraph.savedStateNodes);
             currentGraph.savedStateNodes.Clear();
 
-            for (int i = l.Count; i >= 0; i--)
+            for (int i = l.Count - 1; i >= 0; i--)
             {
                 StateNode s = AddStateNode(l[i].position);
                 s.currentState = l[i].state;
