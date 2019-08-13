@@ -16,6 +16,7 @@ namespace SA.BehaviorEditor
         BaseNode selectedNode;
 
         public static BehaviorGraph currentGraph;
+        static GraphNode graphNode;
 
         public enum UserActions 
         {
@@ -35,6 +36,18 @@ namespace SA.BehaviorEditor
             editor.minSize = new Vector2(800, 600);
             
         }
+        void OnEnable()
+        {
+            if (graphNode == null)
+            {
+                graphNode = CreateInstance<GraphNode>();
+                graphNode.windowRect = new Rect(10, position.height * 0.7f, 200, 100);
+                graphNode.windowTitle = "Graph";
+            }
+            windows.Clear();
+            windows.Add(graphNode);
+            LoadGraph();
+        }
         #endregion
 
         #region GUI Methods
@@ -44,10 +57,6 @@ namespace SA.BehaviorEditor
             mousePosition = e.mousePosition;
             UserInput(e);
             DrawWindows();
-        }
-        void OnEnable()
-        {
-            
         }
         void DrawWindows()
         {
@@ -113,8 +122,16 @@ namespace SA.BehaviorEditor
         {
             GenericMenu menu = new GenericMenu();
             menu.AddSeparator("");
+            if (currentGraph != null)
+            {
             menu.AddItem(new GUIContent("Add State"), false, ContextCallback, UserActions.addState);
             menu.AddItem(new GUIContent("Add Comment"), false, ContextCallback, UserActions.commentNode);
+
+            } else 
+            {
+                menu.AddDisabledItem(new GUIContent("Add State"));
+                menu.AddDisabledItem(new GUIContent("Add Comment"));
+            }
             menu.ShowAsContext();
             e.Use();
         }
@@ -157,11 +174,7 @@ namespace SA.BehaviorEditor
             switch(a)
             {
                 case UserActions.addState :
-                    StateNode stateNode = CreateInstance<StateNode>();
-
-                    stateNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 200, 300);
-                    stateNode.windowTitle = "State";
-                    windows.Add(stateNode);
+                    AddStateNode(mousePosition);
                     break;
                 case UserActions.addTransitionNode : 
                     if (selectedNode is StateNode)
@@ -172,10 +185,7 @@ namespace SA.BehaviorEditor
                     }
                     break;
                 case UserActions.commentNode :
-                    CommentNode commentNode = CreateInstance<CommentNode>();
-                    commentNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 200, 100);
-                    commentNode.windowTitle = "Comment";
-                    windows.Add(commentNode);
+                    AddCommentNode(mousePosition);
                     break;
                 case UserActions.deleteNode :
                     if (selectedNode is StateNode)
@@ -204,6 +214,14 @@ namespace SA.BehaviorEditor
         #endregion
 
         #region HelperMethods
+        public static CommentNode AddCommentNode(Vector2 pos)
+        {
+            CommentNode commentNode = CreateInstance<CommentNode>();
+            commentNode.windowRect = new Rect(pos.x, pos.y, 200, 100);
+            commentNode.windowTitle = "Comment";
+            windows.Add(commentNode);
+            return commentNode;
+        }
 
         public static TransitionNode AddTransitionNode(int index, Transition transition, StateNode from)
         {
@@ -221,15 +239,25 @@ namespace SA.BehaviorEditor
             Vector2 pos = new Vector2(fromRect.x, fromRect.y);
             return AddTransitionNode(pos, transition, from);
         }
+        public static StateNode AddStateNode(Vector2 pos)
+        {
+            StateNode stateNode = new StateNode();
+            stateNode.windowRect = new Rect(pos.x, pos.y, 200, 300);
+            stateNode.windowTitle = "State";
+            windows.Add(stateNode);
+            currentGraph.SetStateNode(stateNode);
+            return stateNode;
+        }
 
         public static TransitionNode AddTransitionNode(Vector2 pos, Transition transition, StateNode from)
         {
+            TransitionNode transitionNode = new TransitionNode();
             transitionNode.Init(from, transition);
             transitionNode.windowRect = new Rect(pos.x, pos.y, 200, 80);
             transitionNode.windowTitle = "Condition Check";
             windows.Add(transitionNode);
             from.dependencies.Add(transitionNode);
-            return TransitionNode;
+            return transitionNode;
         }
 
         public static void DrawNodeCurve(Rect start, Rect end, bool left, Color curveColor)
@@ -260,6 +288,21 @@ namespace SA.BehaviorEditor
             }
         }
 
+        public static void LoadGraph()
+        {
+            currentGraph.Init();
+            List<Saved_StateNode> l = new List<Saved_StateNode>();
+            l.AddRange(currentGraph.savedStateNodes);
+            currentGraph.savedStateNodes.Clear();
+
+            for (int i = l.Count; i >= 0; i--)
+            {
+                StateNode s = AddStateNode(l[i].position);
+                s.currentState = l[i].state;
+                currentGraph.SetStateNode(s);
+                // Load our transitions
+            }
+        }
         #endregion
     }
 }

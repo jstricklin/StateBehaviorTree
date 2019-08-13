@@ -42,10 +42,10 @@ namespace SA.BehaviorEditor
             {
                 serializedState = null;
                 previousState = currentState;
-                // ClearReferences();
+                BehaviorEditor.currentGraph.SetStateNode(this);
                 for (int i = 0; i < currentState.transitions.Count; i++)
                 {
-                    // dependencies.Add(BehaviorEditor.AddTransitionNode(i, currentState.transitions[i], this));
+
                 }
             }
             if (currentState != null)

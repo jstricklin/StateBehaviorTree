@@ -15,11 +15,6 @@ MonoBehaviour:
   onState:
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   onEnter:
   - {fileID: 0}
   - {fileID: 0}
