@@ -13,14 +13,6 @@ MonoBehaviour:
   m_Name: Moving
   m_EditorClassIdentifier: 
   onState: []
-  onEnter:
-  - {fileID: 11400000, guid: 5a5d99b18be40405e9320677e9fd70bd, type: 2}
-  - {fileID: 0}
+  onEnter: []
   onExit: []
-  transitions:
-  - disable: 0
-    condition: {fileID: 0}
-    targetState: {fileID: 0}
-  - disable: 0
-    condition: {fileID: 0}
-    targetState: {fileID: 0}
+  transitions: []

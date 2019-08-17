@@ -9,10 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd89e9b687e824d8d88a5063a3185864, type: 3}
-  m_Name: Normal
+  m_Script: {fileID: 11500000, guid: 5de6af5ca22304e81b34eab534d3cc35, type: 3}
+  m_Name: Is Moving
   m_EditorClassIdentifier: 
-  onState: []
-  onEnter: []
-  onExit: []
-  transitions: []

@@ -25,16 +25,39 @@ namespace SA
             }
             if (node is TransitionNode)
             {
-
+                SetTransitionNode((TransitionNode)node);
             }
-            if (node is TransitionNode)
+            if (node is CommentNode)
             {
                 
             }
         }
-        #region StateNodes
-        public void SetStateNode(StateNode node)
+        public bool IsStateNodeDuplicate(StateNode node)
         {
+            bool retVal = false;
+            StateNode prevNode = null;
+            stateDict.TryGetValue(node.currentState, out prevNode);
+            if (prevNode != null)
+            {
+                retVal = true;
+            }
+            return retVal;
+        }
+        #region StateNodes
+        void SetStateNode(StateNode node)
+        {
+            if (node.isDuplicate)
+            {
+                return;
+            }
+            if (node.previousState != null)
+            {
+                stateDict.Remove(node.previousState);
+            }
+            if (node.currentState == null)
+            {
+                return;
+            }
             Saved_StateNode s = GetSavedState(node);
             if (s == null)
             {
@@ -45,9 +68,10 @@ namespace SA
             s.state = node.currentState;
             s.position = new Vector2(node.windowRect.x, node.windowRect.y);
             s.isCollapsed = node.collapse;
+            stateDict.Add(s.state, node);
         }
 
-        public void ClearStateNode(StateNode node)
+        void ClearStateNode(StateNode node)
         {
             Saved_StateNode s = GetSavedState(node);
             if (s != null)
@@ -64,11 +88,31 @@ namespace SA
             return r;
         }
 
-        public StateNode GetStateNode(State state)
+        StateNode GetStateNode(State state)
         {
             StateNode r = null;
             stateDict.TryGetValue(state, out r);
             return r;
+        }
+        #endregion
+        #region TransitionNodes
+
+        public bool IsTransitionDuplicate(TransitionNode node)
+        {
+            bool retVal = false;
+            Saved_StateNode savedState = GetSavedState(node.enterState);
+            retVal = savedState.IsTransitionDuplicate(node);
+            return retVal;
+        }
+
+        public void SetTransitionNode(TransitionNode node)
+        {
+            Saved_StateNode savedState = GetSavedState(node.enterState);
+            savedState.SetTransitionNode(node);
+        }
+        public void ClearTransitionNode()
+        {
+
         }
         #endregion
     }
@@ -79,10 +123,73 @@ namespace SA
         public Vector2 position;
         public bool isCollapsed;
 
+        public List<Saved_Conditions> savedConditions = new List<Saved_Conditions>();
+        Dictionary<TransitionNode, Saved_Conditions> savedTransDict = new Dictionary<TransitionNode, Saved_Conditions>();
+        Dictionary<Condition, TransitionNode> condDict = new Dictionary<Condition, TransitionNode>();
+
+        public void Init()
+        {
+            savedTransDict.Clear();
+            condDict.Clear();
+        }
+        public bool IsTransitionDuplicate(TransitionNode node)
+        {
+            bool retVal = false;
+            TransitionNode prevNode = null;
+            condDict.TryGetValue(node.targetCondition, out prevNode);
+            if (prevNode != null)
+            {
+                retVal = true;
+            }
+            return retVal;
+        }
+        public void SetTransitionNode(TransitionNode node)
+        {
+            if (node.isDuplicate)
+            {
+                return;
+            }
+            if (node.previousCondition != null)
+            {
+                condDict.Remove(node.targetCondition);
+            }
+            if (node.targetCondition == null)
+            {
+                return;
+            }
+            Saved_Conditions c = GetSavedCondition(node);
+            if (c == null)
+            {
+                c = new Saved_Conditions();
+                savedConditions.Add(c);
+                savedTransDict.Add(node, c);
+                node.transition = node.enterState.currentState.AddTransition();
+            }
+            c.transition = node.transition;
+            c.condition = node.targetCondition;
+            c.transition.condition = c.condition;
+            c.position = new Vector2(node.windowRect.x, node.windowRect.y);
+            condDict.Add(c.condition,node);
+        }
+        Saved_Conditions GetSavedCondition(TransitionNode node)
+        {
+            Saved_Conditions r = null;
+            savedTransDict.TryGetValue(node, out r);
+            return r;
+        }
+
+        TransitionNode GetTransitionNode(Transition transition)
+        {
+            TransitionNode r = null;
+            condDict.TryGetValue(transition.condition, out r);
+            return r;
+        }
     }
     [System.Serializable]
-    public class Saved_Transition
+    public class Saved_Conditions
     {
-
+        public Transition transition;
+        public Condition condition;
+        public Vector2 position;
     }
 }

@@ -181,7 +181,7 @@ namespace SA.BehaviorEditor
             menu.ShowAsContext();
             e.Use();
         }
-
+        // dropdown menu
         void ContextCallback(object o)
         {
             UserActions a = (UserActions)o;
@@ -194,8 +194,8 @@ namespace SA.BehaviorEditor
                     if (selectedNode is StateNode)
                     {
                         StateNode from = (StateNode)selectedNode;
-                        Transition transition = from.AddTransition();
-                        AddTransitionNode(from.currentState.transitions.Count, transition, from);
+                        // Transition transition = from.AddTransition();
+                        AddTransitionNode(from.currentState.transitions.Count, null, from);
                     }
                     break;
                 case UserActions.commentNode :
@@ -212,10 +212,10 @@ namespace SA.BehaviorEditor
                     {
                         TransitionNode target = (TransitionNode)selectedNode;
                         windows.Remove(target);
-                        if (target.enterState.currentState.transitions.Contains(target.targetTransition))
-                        {
-                            target.enterState.currentState.transitions.Remove(target.targetTransition);
-                        }
+                        // if (target.enterState.currentState.transitions.Contains(target.targetCondition))
+                        // {
+                        //     target.enterState.currentState.transitions.Remove(target.targetCondition);
+                        // }
 
                     }
                     if (selectedNode is CommentNode)
@@ -234,7 +234,7 @@ namespace SA.BehaviorEditor
             stateNode.windowRect = new Rect(pos.x, pos.y, 200, 300);
             stateNode.windowTitle = "State";
             windows.Add(stateNode);
-            currentGraph.SetStateNode(stateNode);
+            // currentGraph.SetStateNode(stateNode);
             return stateNode;
         }
         public static CommentNode AddCommentNode(Vector2 pos)
@@ -320,8 +320,11 @@ namespace SA.BehaviorEditor
                 StateNode s = AddStateNode(l[i].position);
                 s.currentState = l[i].state;
                 s.collapse = l[i].isCollapsed;
-                currentGraph.SetStateNode(s);
-                // Load our transitions
+                for (int t = l[i].savedConditions.Count - 1; t >= 0; t--)
+                {
+                    TransitionNode transNode = AddTransitionNode(l[i].savedConditions[t].position, l[i].savedConditions[t].transition, s);
+                    transNode.targetCondition = l[i].savedConditions[t].condition;
+                }
             }
         }
         #endregion

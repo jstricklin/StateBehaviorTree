@@ -13,8 +13,9 @@ namespace SA.BehaviorEditor
     {
         public bool collapse;
         bool previousCollapse;
+        public bool isDuplicate;
         public State currentState;
-        State previousState;
+        public State previousState;
 
         SerializedObject serializedState;
         ReorderableList onStateList;
@@ -42,16 +43,26 @@ namespace SA.BehaviorEditor
             if (previousCollapse != collapse)
             {
                 previousCollapse = collapse;
-                BehaviorEditor.currentGraph.SetStateNode(this);
+                // BehaviorEditor.currentGraph.SetStateNode(this);
             }
             if (previousState != currentState)
             {
                 serializedState = null;
-                previousState = currentState;
-                BehaviorEditor.currentGraph.SetStateNode(this);
-                for (int i = 0; i < currentState.transitions.Count; i++)
+                isDuplicate = BehaviorEditor.currentGraph.IsStateNodeDuplicate(this);
+                if (!isDuplicate)
                 {
+                    BehaviorEditor.currentGraph.SetNode(this);
+                    previousState = currentState;
+                    for (int i = 0; i < currentState.transitions.Count; i++)
+                    {
 
+                    }
+                }
+                if (isDuplicate)
+                {
+                    EditorGUILayout.LabelField("State is a duplicate");
+                    windowRect.height = 100;
+                    return;
                 }
             }
             if (currentState != null)

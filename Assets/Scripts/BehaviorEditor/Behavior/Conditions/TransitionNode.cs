@@ -7,31 +7,48 @@ namespace SA.BehaviorEditor
 {
     public class TransitionNode : BaseNode
     {
-        public Transition targetTransition;
+        public bool isDuplicate;
+        public Condition targetCondition;
+        public Condition previousCondition;
+
+        public Transition transition;
+
         public StateNode enterState;
         public StateNode targetNode;
 
         public void Init(StateNode enterState, Transition transition)
         {
             this.enterState = enterState;
-            targetTransition = transition;
         }
 
         public override void DrawWindow()
         {
-            if (targetTransition == null)
-            {
-                return;
-            }
             EditorGUILayout.LabelField("");
-            targetTransition.condition = (Condition)EditorGUILayout.ObjectField(targetTransition.condition, typeof(Condition), false);
+            targetCondition = (Condition)EditorGUILayout.ObjectField(targetCondition, typeof(Condition), false);
 
-            if (targetTransition.condition == null)
+            if (targetCondition == null)
             {
                 EditorGUILayout.LabelField("No Condition");
             }
             else {
-                targetTransition.disable = EditorGUILayout.Toggle("Disable", targetTransition.disable);
+                if (isDuplicate)
+                {
+                    EditorGUILayout.LabelField("Duplicate Condition");
+                } else {
+                    // if (transition != null)
+                    // {
+                        // transition.disable = EditorGUILayout.Toggle("Disable", transition.disable);
+                    // }
+                } 
+            }
+            if (previousCondition != targetCondition)
+            {
+                isDuplicate = BehaviorEditor.currentGraph.IsTransitionDuplicate(this);
+                if (!isDuplicate)
+                {
+                    BehaviorEditor.currentGraph.SetNode(this);
+                }
+                previousCondition = targetCondition;
             }
         }
 
