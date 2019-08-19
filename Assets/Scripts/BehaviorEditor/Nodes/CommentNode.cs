@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SA.BehaviorEditor {
-    public class CommentNode : BaseNode
+    public class CommentNode : ScriptableObject
     {
 
-string comment = "This is a comment";
+        // string comment = "This is a comment";
 
-        public override void DrawWindow()
-        {
-            comment = GUILayout.TextArea(comment, 200);
-        }
+        // public override void DrawWindow()
+        // {
+        //     comment = GUILayout.TextArea(comment, 200);
+        // }
     }
 }

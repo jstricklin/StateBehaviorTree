@@ -9,7 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a0dc765a6cbd4767a01ab850b32b583, type: 3}
-  m_Name: Graph 1
+  m_Script: {fileID: 11500000, guid: 066f72f20f2284871ba3e6def84043a9, type: 3}
+  m_Name: EditorSettings
   m_EditorClassIdentifier: 
-  savedStateNodes: []
+  currentGraph: {fileID: 0}
+  stateNode: {fileID: 11400000, guid: dfff1413192ff417eb721f0c20da6b7f, type: 2}
+  transitionNode: {fileID: 0}
+  commentNode: {fileID: 0}

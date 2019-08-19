@@ -5,9 +5,9 @@ using UnityEditor;
 
 namespace SA.BehaviorEditor
 {
-    public class TransitionNode : BaseNode
+    public class TransitionNode : ScriptableObject
     {
-        public bool isDuplicate;
+        /* public bool isDuplicate;
         public Condition targetCondition;
         public Condition previousCondition;
 
@@ -64,6 +64,6 @@ namespace SA.BehaviorEditor
                 BehaviorEditor.DrawNodeCurve(enterState.windowRect, rect, true, Color.black);
             }
 
-        }
+        } */
     }
 }
