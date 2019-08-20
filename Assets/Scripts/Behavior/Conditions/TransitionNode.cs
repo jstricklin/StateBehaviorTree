@@ -5,33 +5,32 @@ using UnityEditor;
 
 namespace SA.BehaviorEditor
 {
-    public class TransitionNode : ScriptableObject
+    public class TransitionNode : DrawNode
     {
-        /* public bool isDuplicate;
-        public Condition targetCondition;
-        public Condition previousCondition;
+        // public bool isDuplicate;
+        // public Condition targetCondition;
+        // public Condition previousCondition;
 
-        public Transition transition;
+        // public Transition transition;
 
-        public StateNode enterState;
-        public StateNode targetNode;
+        // public StateNode enterState;
+        // public StateNode targetNode;
 
         public void Init(StateNode enterState, Transition transition)
         {
-            this.enterState = enterState;
+            // this.enterState = enterState;
         }
 
-        public override void DrawWindow()
+        public override void DrawWindow(BaseNode b)
         {
             EditorGUILayout.LabelField("");
-            targetCondition = (Condition)EditorGUILayout.ObjectField(targetCondition, typeof(Condition), false);
 
-            if (targetCondition == null)
+            if (b.transRef.targetCondition == null)
             {
                 EditorGUILayout.LabelField("No Condition");
             }
             else {
-                if (isDuplicate)
+                if (b.transRef.isDuplicate)
                 {
                     EditorGUILayout.LabelField("Duplicate Condition");
                 } else {
@@ -41,29 +40,29 @@ namespace SA.BehaviorEditor
                     // }
                 } 
             }
-            if (previousCondition != targetCondition)
+            if (b.transRef.previousCondition != b.transRef.targetCondition)
             {
-                isDuplicate = BehaviorEditor.currentGraph.IsTransitionDuplicate(this);
-                if (!isDuplicate)
+                b.transRef.isDuplicate = BehaviorEditor.settings.currentGraph.IsTransitionDuplicate(this);
+                if (!b.transRef.isDuplicate)
                 {
-                    BehaviorEditor.currentGraph.SetNode(this);
+                    // BehaviorEditor.settings.currentGraph.SetNode(this);
                 }
-                previousCondition = targetCondition;
+                b.transRef.previousCondition = b.transRef.targetCondition;
             }
         }
 
-        public override void DrawCurve()
+        public override void DrawCurve(BaseNode b)
         {
-            if (enterState)
+            if (b.transRef.enterState)
             {
-                Rect rect = windowRect;
-                rect.y += windowRect.height * 0.5f;
+                Rect rect = b.windowRect;
+                rect.y += b.windowRect.height * 0.5f;
                 rect.width = 1;
                 rect.height = 1;
 
-                BehaviorEditor.DrawNodeCurve(enterState.windowRect, rect, true, Color.black);
+                // BehaviorEditor.DrawNodeCurve(b.transRef.enterState.windowRect, rect, true, Color.black);
             }
 
-        } */
+        }
     }
 }

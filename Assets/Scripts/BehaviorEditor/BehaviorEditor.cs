@@ -137,11 +137,11 @@ namespace SA.BehaviorEditor
 
         void ModifyNode(Event e)
         {
-            /* GenericMenu menu = new GenericMenu();
-            if (selectedNode is StateNode)
+            GenericMenu menu = new GenericMenu();
+            if (selectedNode.drawNode is StateNode)
             {
-                StateNode stateNode = (StateNode)selectedNode;
-                if (stateNode.currentState != null)
+                StateNode stateNode = (StateNode)selectedNode.drawNode;
+                if (stateNode != null)
                     {
                         menu.AddSeparator("");
                         menu.AddItem(new GUIContent("Add Transition"), false, ContextCallback, UserActions.addTransitionNode);
@@ -153,62 +153,56 @@ namespace SA.BehaviorEditor
                 menu.AddSeparator("");
                 menu.AddItem(new GUIContent("Delete"), false, ContextCallback, UserActions.deleteNode);
             }
-            if (selectedNode is CommentNode)
+            if (selectedNode.drawNode is CommentNode)
             {
                 menu.AddSeparator("");
                 menu.AddItem(new GUIContent("Delete"), false, ContextCallback, UserActions.deleteNode);
             }
-            if (selectedNode is TransitionNode)
+            if (selectedNode.drawNode is TransitionNode)
             {
                 menu.AddSeparator("");
                 menu.AddItem(new GUIContent("Delete"), false, ContextCallback, UserActions.deleteNode);
             }
             menu.ShowAsContext();
-            e.Use(); */
+            e.Use(); 
         }
         // dropdown menu
         void ContextCallback(object o)
         {
-            /*UserActions a = (UserActions)o;
+            UserActions a = (UserActions)o;
             switch(a)
             {
                 case UserActions.addState :
-                    AddStateNode(mousePosition);
+                    BaseNode baseNode = new BaseNode();
+                    baseNode.drawNode = settings.stateNode;
+                    baseNode.windowRect.width = 200;
+                    baseNode.windowRect.height = 100;
+                    baseNode.windowTitle = "State Node";
+                    settings.currentGraph.windows.Add(baseNode);
                     break;
                 case UserActions.addTransitionNode : 
-                    if (selectedNode is StateNode)
-                    {
-                        StateNode from = (StateNode)selectedNode;
-                        // Transition transition = from.AddTransition();
-                        AddTransitionNode(from.currentState.transitions.Count, null, from);
-                    }
+                    BaseNode transNode = new BaseNode();
+                    transNode.drawNode = settings.transitionNode;
+                    transNode.windowRect.width = 200;
+                    transNode.windowRect.height = 100;
+                    transNode.windowTitle = "Transition Node";
+                    settings.currentGraph.windows.Add(transNode);
+
                     break;
                 case UserActions.commentNode :
-                    AddCommentNode(mousePosition);
+                    BaseNode commentNode = new BaseNode();
+                    commentNode.drawNode = settings.commentNode;
+                    commentNode.windowRect.width = 200;
+                    commentNode.windowRect.height = 100;
+                    commentNode.windowTitle = "Comment Node";
+                    settings.currentGraph.windows.Add(commentNode);
+
                     break;
                 case UserActions.deleteNode :
-                    if (selectedNode is StateNode)
-                    {
-                        StateNode target = (StateNode)selectedNode;
-                        target.ClearReferences();
-                        windows.Remove(target);
-                    }
-                    if (selectedNode is TransitionNode)
-                    {
-                        TransitionNode target = (TransitionNode)selectedNode;
-                        windows.Remove(target);
-                        // if (target.enterState.currentState.transitions.Contains(target.targetCondition))
-                        // {
-                        //     target.enterState.currentState.transitions.Remove(target.targetCondition);
-                        // }
 
-                    }
-                    if (selectedNode is CommentNode)
-                    {
-                        windows.Remove(selectedNode);
-                    }
                     break;
-            } */
+            } 
+            EditorUtility.SetDirty(settings);
         }
         #endregion
 

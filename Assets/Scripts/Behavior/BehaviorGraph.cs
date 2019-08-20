@@ -14,6 +14,10 @@ namespace SA
         {
             return false;
         }
+        public bool IsTransitionDuplicate(TransitionNode node)
+        {
+            return false;
+        }
         #endregion
     }
 
