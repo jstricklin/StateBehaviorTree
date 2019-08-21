@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SA.BehaviorEditor {
+    [CreateAssetMenu(menuName = "Editor/Nodes/Comment Node")]
     public class CommentNode : DrawNode
     {
         public override void DrawCurve(BaseNode n)
         {
-            throw new System.NotImplementedException();
+            // throw new System.NotImplementedException();
         }
-
-        // string comment = "This is a comment";
 
         public override void DrawWindow(BaseNode b)
         {
-            // comment = GUILayout.TextArea(comment, 200);
+            // string comment = b.commentRef.comment != null ? b.commentRef.comment : "Enter a comment!";
+            GUILayout.TextArea(b.comment, 200);
         }
     }
 }

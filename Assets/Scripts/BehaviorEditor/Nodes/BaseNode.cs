@@ -9,14 +9,24 @@ namespace SA.BehaviorEditor
     [System.Serializable]
     public class BaseNode 
     {
+        public int id;
         public DrawNode drawNode;
-        // [HideInInspector]
         public Rect windowRect;
-        // [HideInInspector]
         public string windowTitle;
+        public int enterNode;
+        public int targetNode;
+        public bool isDuplicate;
+        public string comment;
 
+        public bool collapse;
+        [HideInInspector]
+        public bool previousCollapse;
+
+        [SerializeField]
         public StateNodeReferences stateRef;
+        [SerializeField]
         public TransitionNodeReferences transRef;
+        // public CommentNodeReferences commentRef;
 
         public void DrawWindow()
         {
@@ -36,54 +46,19 @@ namespace SA.BehaviorEditor
     [System.Serializable]
     public class StateNodeReferences
     {
-        [HideInInspector]
-        public bool collapse;
-        [HideInInspector]
-        public bool previousCollapse;
-        [HideInInspector]
-        public bool isDuplicate;
-        [HideInInspector]
+        // [HideInInspector]
         public State currentState;
         [HideInInspector]
         public State previousState;
-        [HideInInspector]
-        public SerializedObject serializedState;
-        [HideInInspector]
-        public ReorderableList onStateList;
-        [HideInInspector]
-        public ReorderableList onEnterList;
-        [HideInInspector]
-        public ReorderableList onExitList;
 
     }
     [System.Serializable]
     public class TransitionNodeReferences
     {
-        [HideInInspector]
-        public bool collapse;
-        [HideInInspector]
-        public bool previousCollapse;
-        [HideInInspector]
-        public bool isDuplicate;
-        [HideInInspector]
-        public State currentState;
-        [HideInInspector]
-        public State previousState;
-        [HideInInspector]
-        public SerializedObject serializedState;
-        [HideInInspector]
-        public ReorderableList onStateList;
-        [HideInInspector]
-        public ReorderableList onEnterList;
-        [HideInInspector]
-        public ReorderableList onExitList;
-        [HideInInspector]
+        // [HideInInspector]
         public Condition targetCondition;
         [HideInInspector]
         public Condition previousCondition;
-        [HideInInspector]
-        public StateNode enterState;
-        [HideInInspector]
-        public StateNode targetNode;
+        public int transitionId;
     }
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 066f72f20f2284871ba3e6def84043a9, type: 3}
   m_Name: EditorSettings
   m_EditorClassIdentifier: 
-  currentGraph: {fileID: 0}
+  currentGraph: {fileID: 11400000, guid: 2238d4682510c43cca9606e503565826, type: 2}
   stateNode: {fileID: 11400000, guid: dfff1413192ff417eb721f0c20da6b7f, type: 2}
-  transitionNode: {fileID: 0}
-  commentNode: {fileID: 0}
+  transitionNode: {fileID: 11400000, guid: 894fec9f5a8a8424387ce237e64e675d, type: 2}
+  commentNode: {fileID: 11400000, guid: ed63d5341209e475bbc8323f5a77a533, type: 2}

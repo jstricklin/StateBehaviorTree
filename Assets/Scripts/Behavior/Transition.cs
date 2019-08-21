@@ -7,9 +7,10 @@ namespace SA
     [System.Serializable]
     public class Transition 
     {
-        public bool disable;
+        public int id;
         public Condition condition;
         public State targetState;
+        public bool disable;
     }
     
 }

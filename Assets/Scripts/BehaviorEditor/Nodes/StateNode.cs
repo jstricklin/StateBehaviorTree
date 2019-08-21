@@ -18,70 +18,71 @@ namespace SA.BehaviorEditor
             {
                 EditorGUILayout.LabelField("Add State To Modify:");
             } else {
-                if(!b.stateRef.collapse)
+                if(!b.collapse)
                 {
 
                 } else {
                     b.windowRect.height = 100;
                 }
-                b.stateRef.collapse = EditorGUILayout.Toggle(" ", b.stateRef.collapse);
+                b.collapse = EditorGUILayout.Toggle(" ", b.collapse);
             }
             b.stateRef.currentState = (State)EditorGUILayout.ObjectField(b.stateRef.currentState, typeof(State), false);
 
-            if (b.stateRef.previousCollapse != b.stateRef.collapse)
+            if (b.previousCollapse != b.collapse)
             {
-                b.stateRef.previousCollapse = b.stateRef.collapse;
-                // BehaviorEditor.currentGraph.SetStateNode(this);
+                b.previousCollapse = b.collapse;
             }
             if (b.stateRef.previousState != b.stateRef.currentState)
             {
-                b.stateRef.serializedState = null;
-                b.stateRef.isDuplicate = BehaviorEditor.settings.currentGraph.IsStateNodeDuplicate(this);
-                if (!b.stateRef.isDuplicate)
+                b.isDuplicate = BehaviorEditor.settings.currentGraph.IsStateDuplicate(b);
+                if (b.isDuplicate)
                 {
-                    // BehaviorEditor.currentGraph.SetNode(this);
+                    EditorGUILayout.LabelField("State is a duplicate");
+                    b.windowRect.height = 100;
+                    return;
+                }
+                if (!b.isDuplicate)
+                {
                     b.stateRef.previousState = b.stateRef.currentState;
                     for (int i = 0; i < b.stateRef.currentState.transitions.Count; i++)
                     {
 
                     }
                 }
-                if (b.stateRef.isDuplicate)
-                {
-                    EditorGUILayout.LabelField("State is a duplicate");
-                    b.windowRect.height = 100;
-                    return;
-                }
             }
             if (b.stateRef.currentState != null)
             {
+                SerializedObject serializedState = new SerializedObject(b.stateRef.currentState);
+                
+                ReorderableList onStateList;
+                ReorderableList onEnterList;
+                ReorderableList onExitList;
 
-                if (b.stateRef.serializedState == null)
+                // b.stateRef.serializedState = new SerializedObject(b.stateRef.currentState);
+                onStateList = new ReorderableList(serializedState, serializedState.FindProperty("onState"), true, true, true, true);
+                onEnterList = new ReorderableList(serializedState, serializedState.FindProperty("onEnter"), true, true, true, true);
+                onExitList = new ReorderableList(serializedState, serializedState.FindProperty("onExit"), true, true, true, true);
+
+                // if (b.stateRef.serializedState == null)
+                // {
+                // }
+                if (!b.collapse)
                 {
-                    b.stateRef.serializedState = new SerializedObject(b.stateRef.currentState);
-                    b.stateRef.onStateList = new ReorderableList(b.stateRef.serializedState, b.stateRef.serializedState.FindProperty("onState"), true, true, true, true);
-                    b.stateRef.onEnterList = new ReorderableList(b.stateRef.serializedState, b.stateRef.serializedState.FindProperty("onEnter"), true, true, true, true);
-                    b.stateRef.onExitList = new ReorderableList(b.stateRef.serializedState, b.stateRef.serializedState.FindProperty("onExit"), true, true, true, true);
-                }
-                if (!b.stateRef.collapse)
-                {
-                    b.stateRef.serializedState.Update();
-                    HandleReordableList(b.stateRef.onStateList, "On state");
-                    HandleReordableList(b.stateRef.onEnterList, "On enter");
-                    HandleReordableList(b.stateRef.onExitList, "On exit");
+                    serializedState.Update();
+                    HandleReordableList(onStateList, "On state");
+                    HandleReordableList(onEnterList, "On enter");
+                    HandleReordableList(onExitList, "On exit");
 
                     EditorGUILayout.LabelField("");
-                    b.stateRef.onStateList.DoLayoutList();
+                    onStateList.DoLayoutList();
                     EditorGUILayout.LabelField("");
-                    b.stateRef.onEnterList.DoLayoutList();
+                    onEnterList.DoLayoutList();
                     EditorGUILayout.LabelField("");
-                    b.stateRef.onExitList.DoLayoutList();
+                    onExitList.DoLayoutList();
                     
-                    b.stateRef.serializedState.ApplyModifiedProperties();
+                    serializedState.ApplyModifiedProperties();
                     float standard = 300;
-                    standard += (b.stateRef.onStateList.count) * 20;
-                    standard += (b.stateRef.onEnterList.count) * 20;
-                    standard += (b.stateRef.onExitList.count) * 20;
+                    standard += (onExitList.count + onStateList.count + onEnterList.count) * 20;
                     b.windowRect.height = standard;
 
                 }
@@ -108,10 +109,9 @@ namespace SA.BehaviorEditor
 
         }
 
-        public Transition AddTransition()
+        public Transition AddTransition(BaseNode b)
         {
-            // return b.currentState.AddTransition();
-            return null;
+            return b.stateRef.currentState.AddTransition();
         }
 
         public void ClearReferences()

@@ -5,6 +5,7 @@ using UnityEditor;
 
 namespace SA.BehaviorEditor
 {
+    [CreateAssetMenu(menuName = "Editor/Nodes/Transition Node")]
     public class TransitionNode : DrawNode
     {
         // public bool isDuplicate;
@@ -24,13 +25,14 @@ namespace SA.BehaviorEditor
         public override void DrawWindow(BaseNode b)
         {
             EditorGUILayout.LabelField("");
+            b.transRef.targetCondition = (Condition)EditorGUILayout.ObjectField(b.transRef.targetCondition, typeof(Condition), false);
 
             if (b.transRef.targetCondition == null)
             {
                 EditorGUILayout.LabelField("No Condition");
             }
             else {
-                if (b.transRef.isDuplicate)
+                if (b.isDuplicate)
                 {
                     EditorGUILayout.LabelField("Duplicate Condition");
                 } else {
@@ -42,8 +44,8 @@ namespace SA.BehaviorEditor
             }
             if (b.transRef.previousCondition != b.transRef.targetCondition)
             {
-                b.transRef.isDuplicate = BehaviorEditor.settings.currentGraph.IsTransitionDuplicate(this);
-                if (!b.transRef.isDuplicate)
+                b.isDuplicate = BehaviorEditor.settings.currentGraph.IsTransitionDuplicate(b);
+                if (!b.isDuplicate)
                 {
                     // BehaviorEditor.settings.currentGraph.SetNode(this);
                 }
@@ -53,16 +55,20 @@ namespace SA.BehaviorEditor
 
         public override void DrawCurve(BaseNode b)
         {
-            if (b.transRef.enterState)
-            {
                 Rect rect = b.windowRect;
                 rect.y += b.windowRect.height * 0.5f;
                 rect.width = 1;
                 rect.height = 1;
 
-                // BehaviorEditor.DrawNodeCurve(b.transRef.enterState.windowRect, rect, true, Color.black);
-            }
-
+                BaseNode node = BehaviorEditor.settings.currentGraph.GetNodeWithIndex(b.enterNode);
+                // if enterNode is null, enterNode has likely been deleted. remove this node
+                if (node == null)
+                {
+                    BehaviorEditor.settings.currentGraph.DeleteNode(node.id);
+                } else {
+                    Rect r = node.windowRect;
+                    BehaviorEditor.DrawNodeCurve(r, rect, true, Color.black);
+                }
         }
     }
 }
