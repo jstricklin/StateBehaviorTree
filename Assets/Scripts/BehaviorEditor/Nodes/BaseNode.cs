@@ -55,8 +55,6 @@ namespace SA.BehaviorEditor
     [System.Serializable]
     public class TransitionNodeReferences
     {
-        // [HideInInspector]
-        public Condition targetCondition;
         [HideInInspector]
         public Condition previousCondition;
         public int transitionId;

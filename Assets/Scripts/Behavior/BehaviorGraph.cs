@@ -66,7 +66,7 @@ namespace SA
             for (int i = 0; i < enter.stateRef.currentState.transitions.Count; i++)
             {
                 Transition t = enter.stateRef.currentState.transitions[i];
-                if (t.condition == b.transRef.targetCondition && t.id != b.transRef.transitionId)
+                if (t.condition == b.transRef.previousCondition && b.transRef.transitionId != t.id)
                 {
                     return true;
                 }

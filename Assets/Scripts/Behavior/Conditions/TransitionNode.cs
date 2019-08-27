@@ -25,9 +25,16 @@ namespace SA.BehaviorEditor
         public override void DrawWindow(BaseNode b)
         {
             EditorGUILayout.LabelField("");
-            b.transRef.targetCondition = (Condition)EditorGUILayout.ObjectField(b.transRef.targetCondition, typeof(Condition), false);
 
-            if (b.transRef.targetCondition == null)
+            BaseNode enterNode = BehaviorEditor.settings.currentGraph.GetNodeWithIndex(b.enterNode);
+
+            Transition transition = enterNode.stateRef.currentState.GetTransition(b.transRef.transitionId);
+
+            transition.condition 
+                = (Condition)EditorGUILayout.ObjectField(transition.condition,
+                typeof(Condition), false);
+
+            if (transition.condition == null)
             {
                 EditorGUILayout.LabelField("No Condition");
             }
@@ -42,14 +49,14 @@ namespace SA.BehaviorEditor
                     // }
                 } 
             }
-            if (b.transRef.previousCondition != b.transRef.targetCondition)
+            if (b.transRef.previousCondition != transition.condition)
             {
+                b.transRef.previousCondition = transition.condition;
                 b.isDuplicate = BehaviorEditor.settings.currentGraph.IsTransitionDuplicate(b);
                 if (!b.isDuplicate)
                 {
                     // BehaviorEditor.settings.currentGraph.SetNode(this);
                 }
-                b.transRef.previousCondition = b.transRef.targetCondition;
             }
         }
 
