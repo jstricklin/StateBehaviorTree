@@ -17,8 +17,8 @@ MonoBehaviour:
     drawNode: {fileID: 11400000, guid: dfff1413192ff417eb721f0c20da6b7f, type: 2}
     windowRect:
       serializedVersion: 2
-      x: 147
-      y: 128
+      x: 301
+      y: 168
       width: 200
       height: 300
     windowTitle: State Node
@@ -29,18 +29,17 @@ MonoBehaviour:
     collapse: 0
     previousCollapse: 0
     stateRef:
-      currentState: {fileID: 11400000, guid: ee46147b74768449aa7f8b89ae89394a, type: 2}
-      previousState: {fileID: 11400000, guid: ee46147b74768449aa7f8b89ae89394a, type: 2}
+      currentState: {fileID: 11400000, guid: 61852fc9fef4c48c5b15050a77535987, type: 2}
+      previousState: {fileID: 11400000, guid: 61852fc9fef4c48c5b15050a77535987, type: 2}
     transRef:
-      targetCondition: {fileID: 0}
       previousCondition: {fileID: 0}
       transitionId: 0
-  - id: 6
+  - id: 1
     drawNode: {fileID: 11400000, guid: 894fec9f5a8a8424387ce237e64e675d, type: 2}
     windowRect:
       serializedVersion: 2
-      x: 563
-      y: 110
+      x: 692
+      y: 92
       width: 200
       height: 100
     windowTitle: Transition Node
@@ -54,9 +53,29 @@ MonoBehaviour:
       currentState: {fileID: 0}
       previousState: {fileID: 0}
     transRef:
-      targetCondition: {fileID: 11400000, guid: ff7ef42603ec740b5a7a53ee18ea46c7,
-        type: 2}
       previousCondition: {fileID: 11400000, guid: ff7ef42603ec740b5a7a53ee18ea46c7,
         type: 2}
-      transitionId: 4
-  idCount: 8
+      transitionId: 0
+  - id: 2
+    drawNode: {fileID: 11400000, guid: 894fec9f5a8a8424387ce237e64e675d, type: 2}
+    windowRect:
+      serializedVersion: 2
+      x: 705
+      y: 289
+      width: 200
+      height: 100
+    windowTitle: Transition Node
+    enterNode: 0
+    targetNode: 0
+    isDuplicate: 0
+    comment: 
+    collapse: 0
+    previousCollapse: 0
+    stateRef:
+      currentState: {fileID: 0}
+      previousState: {fileID: 0}
+    transRef:
+      previousCondition: {fileID: 11400000, guid: 45fa9e2f97d43477cb1be0612bde0f87,
+        type: 2}
+      transitionId: 1
+  idCount: 3

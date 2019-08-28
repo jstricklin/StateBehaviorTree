@@ -10,16 +10,20 @@ namespace SA.BehaviorEditor
     {
         #region Variables
         Vector3 mousePosition;
-        bool makeTransition;
         bool clickedOnWindow;
+        // selected index logic was fix from vid that did not work - does nothing currently
+        int selectedIndex;
         BaseNode selectedNode;
 
         public static EditorSettings settings;
+        int transitFromId;
+        Rect mouseRect = new Rect(0,0,1,1);
 
         public enum UserActions 
         {
             addState,
             addTransitionNode,
+            makeTransition,
             deleteNode,
             commentNode
         }
@@ -50,6 +54,14 @@ namespace SA.BehaviorEditor
             if (e.type == EventType.MouseDrag)
             {
                 settings.currentGraph.DeleteWindowsThatNeedTo();
+                Repaint();
+            }
+            if (settings.makeTransition)
+            {
+                mouseRect.x = mousePosition.x;
+                mouseRect.y = mousePosition.y;
+                Rect from = settings.currentGraph.GetNodeWithIndex(transitFromId).windowRect;
+                DrawNodeCurve(from, mouseRect,true,Color.blue);
                 Repaint();
             }
         }
@@ -85,25 +97,32 @@ namespace SA.BehaviorEditor
             {
                 return;
             }
-            if (e.button == 1 && !makeTransition)
+            if (e.button == 1 && !settings.makeTransition)
             {
                 if (e.type == EventType.MouseDown)
                 {
                     RightClick(e);
                 }
             }
-            if (e.button == 0 && !makeTransition)
+            if (e.button == 0 && !settings.makeTransition)
             {
                 if (e.type == EventType.MouseDown)
                 {
                     // LeftClick(e);
                 }
             }
+            if (e.button == 0 && settings.makeTransition)
+            {
+                if (e.type == EventType.MouseDown)
+                {
+                    MakeTransition();
+                }
+            }
         }
 
         private void RightClick(Event e)
         {
-            selectedNode = null;
+            selectedIndex = -1;
             clickedOnWindow = false;
             for (int i = 0; i < settings.currentGraph.windows.Count; i++)
             {
@@ -111,6 +130,7 @@ namespace SA.BehaviorEditor
                 {
                     clickedOnWindow = true;
                     selectedNode = settings.currentGraph.windows[i];
+                    selectedIndex = i;
                     break;
                 }
             }
@@ -121,6 +141,39 @@ namespace SA.BehaviorEditor
                 ModifyNode(e);
             }
         }
+
+        void MakeTransition()
+        {
+            clickedOnWindow = false;
+            settings.makeTransition = false;
+            for (int i = 0; i < settings.currentGraph.windows.Count; i++)
+            {
+                if (settings.currentGraph.windows[i].windowRect.Contains(mousePosition))
+                {
+                    clickedOnWindow = true;
+                    selectedNode = settings.currentGraph.windows[i];
+                    selectedIndex = i;
+                    break;
+                }
+            }
+            if (clickedOnWindow)
+            {
+                if (selectedNode.drawNode is StateNode)
+                {
+                    if (selectedNode.id != transitFromId)
+                    {
+                        BaseNode transNode = settings.currentGraph.GetNodeWithIndex(transitFromId);
+                        transNode.targetNode = selectedNode.id;
+                        
+                        BaseNode enterNode = BehaviorEditor.settings.currentGraph.GetNodeWithIndex(transNode.enterNode);
+                        Transition transition = enterNode.stateRef.currentState.GetTransition(enterNode.transRef.transitionId);
+                        transition.targetState = selectedNode.stateRef.currentState;
+                    }
+                }
+            }
+        }
+        #endregion
+        #region Context Menus
 
         void AddNewNode(Event e)
         {
@@ -153,7 +206,6 @@ namespace SA.BehaviorEditor
                         menu.AddSeparator("");
                         menu.AddItem(new GUIContent("Add Condition"), false, ContextCallback, UserActions.addTransitionNode);
                     } else {
-
                     menu.AddSeparator("");
                     menu.AddDisabledItem(new GUIContent("Add Condition"));
                     }
@@ -167,6 +219,9 @@ namespace SA.BehaviorEditor
             }
             if (selectedNode.drawNode is TransitionNode)
             {
+                menu.AddSeparator("");
+                menu.AddItem(new GUIContent("Make Transition"), false, ContextCallback, UserActions.makeTransition);
+
                 menu.AddSeparator("");
                 menu.AddItem(new GUIContent("Delete"), false, ContextCallback, UserActions.deleteNode);
             }
@@ -196,11 +251,15 @@ namespace SA.BehaviorEditor
                 case UserActions.deleteNode :
                     settings.currentGraph.DeleteNode(selectedNode.id);
                     break;
+                case UserActions.makeTransition :
+                    transitFromId = selectedNode.id;
+                    settings.makeTransition = true;
+                    break;
             } 
             EditorUtility.SetDirty(settings);
         }
-        #endregion
 
+        #endregion
         #region HelperMethods
 
         public static void DrawNodeCurve(Rect start, Rect end, bool left, Color curveColor)

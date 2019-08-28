@@ -62,20 +62,35 @@ namespace SA.BehaviorEditor
 
         public override void DrawCurve(BaseNode b)
         {
-                Rect rect = b.windowRect;
-                rect.y += b.windowRect.height * 0.5f;
-                rect.width = 1;
-                rect.height = 1;
+            Rect rect = b.windowRect;
+            rect.y += b.windowRect.height * 0.5f;
+            rect.width = 1;
+            rect.height = 1;
 
-                BaseNode node = BehaviorEditor.settings.currentGraph.GetNodeWithIndex(b.enterNode);
-                // if enterNode is null, enterNode has likely been deleted. remove this node
-                if (node == null)
+            BaseNode enter = BehaviorEditor.settings.currentGraph.GetNodeWithIndex(b.enterNode);
+            // if enterNode is null, enterNode has likely been deleted. remove this node
+            if (enter == null)
+            {
+                BehaviorEditor.settings.currentGraph.DeleteNode(enter.id);
+            } else {
+                Rect r = enter.windowRect;
+                BehaviorEditor.DrawNodeCurve(r, rect, true, Color.black);
+            }
+            if (b.targetNode > 0)
+            {
+                BaseNode target = BehaviorEditor.settings.currentGraph.GetNodeWithIndex(b.targetNode);
+                // if target is null, target has likely been deleted. remove this node
+                if (target == null)
                 {
-                    BehaviorEditor.settings.currentGraph.DeleteNode(node.id);
+                    b.targetNode = -1;
                 } else {
-                    Rect r = node.windowRect;
-                    BehaviorEditor.DrawNodeCurve(r, rect, true, Color.black);
+                    rect = b.windowRect;
+                    rect.x += rect.width;
+                    Rect endRect = target.windowRect;
+                    endRect.x -= endRect.width * 0.5f;
+                    BehaviorEditor.DrawNodeCurve(rect, endRect, false, Color.black);
                 }
+            }
         }
     }
 }

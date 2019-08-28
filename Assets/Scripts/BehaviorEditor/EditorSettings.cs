@@ -11,6 +11,7 @@ namespace SA.BehaviorEditor
         public StateNode stateNode;
         public TransitionNode transitionNode;
         public CommentNode commentNode;
+        public bool makeTransition;
 
         public BaseNode AddNodeOnGraph(DrawNode type, float width, float height, string title, Vector3 pos)
         {

@@ -14,7 +14,7 @@ namespace SA.BehaviorEditor {
         public override void DrawWindow(BaseNode b)
         {
             // string comment = b.commentRef.comment != null ? b.commentRef.comment : "Enter a comment!";
-            GUILayout.TextArea(b.comment, 200);
+            b.comment = GUILayout.TextArea(b.comment, 200);
         }
     }
 }
