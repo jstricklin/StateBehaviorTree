@@ -37,8 +37,10 @@ namespace SA.BehaviorEditor
             if (transition.condition == null)
             {
                 EditorGUILayout.LabelField("No Condition");
+                b.isAssigned = false;
             }
             else {
+                b.isAssigned = true;
                 if (b.isDuplicate)
                 {
                     EditorGUILayout.LabelField("Duplicate Condition");
@@ -73,8 +75,19 @@ namespace SA.BehaviorEditor
             {
                 BehaviorEditor.settings.currentGraph.DeleteNode(enter.id);
             } else {
+                
+                // color transition lines
+                Color targetColor = Color.green;
+                if (!b.isAssigned || b.isDuplicate)
+                {
+                    targetColor = Color.red;
+                }
                 Rect r = enter.windowRect;
-                BehaviorEditor.DrawNodeCurve(r, rect, true, Color.black);
+                BehaviorEditor.DrawNodeCurve(r, rect, true, targetColor);
+            }
+            if (b.isDuplicate)
+            {
+                return;
             }
             if (b.targetNode > 0)
             {
@@ -88,7 +101,13 @@ namespace SA.BehaviorEditor
                     rect.x += rect.width;
                     Rect endRect = target.windowRect;
                     endRect.x -= endRect.width * 0.5f;
-                    BehaviorEditor.DrawNodeCurve(rect, endRect, false, Color.black);
+                    Color targetColor = Color.green;
+                    if (!target.isAssigned || target.isDuplicate)
+                    {
+                        targetColor = Color.red;
+                    }
+                    Rect r = enter.windowRect;
+                    BehaviorEditor.DrawNodeCurve(rect, endRect, false, targetColor);
                 }
             }
         }

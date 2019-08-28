@@ -18,6 +18,8 @@ namespace SA.BehaviorEditor
         public static EditorSettings settings;
         int transitFromId;
         Rect mouseRect = new Rect(0,0,1,1);
+        Rect all = new Rect(-5, -5, 10000, 10000);
+        GUIStyle style;
 
         public enum UserActions 
         {
@@ -41,6 +43,7 @@ namespace SA.BehaviorEditor
         void OnEnable()
         {
             settings = Resources.Load("EditorSettings") as EditorSettings;
+            style = settings.skin.GetStyle("window");
         }
         #endregion
 
@@ -67,6 +70,7 @@ namespace SA.BehaviorEditor
         }
         void DrawWindows()
         {
+            GUILayout.BeginArea(all, style);
             BeginWindows();
             EditorGUILayout.LabelField(" ", GUILayout.Width(100));
             EditorGUILayout.LabelField("Assign Graph", GUILayout.Width(100));
@@ -83,6 +87,7 @@ namespace SA.BehaviorEditor
                 }
             }
             EndWindows();
+            GUILayout.EndArea();
         }
 
         void DrawNodeWindow(int id)
@@ -219,9 +224,16 @@ namespace SA.BehaviorEditor
             }
             if (selectedNode.drawNode is TransitionNode)
             {
-                menu.AddSeparator("");
-                menu.AddItem(new GUIContent("Make Transition"), false, ContextCallback, UserActions.makeTransition);
-
+                if (selectedNode.isDuplicate || !selectedNode.isAssigned)
+                {
+                    menu.AddSeparator("");
+                    menu.AddDisabledItem(new GUIContent("Make Transition"));
+                }
+                else 
+                {
+                    menu.AddSeparator("");
+                    menu.AddItem(new GUIContent("Make Transition"), false, ContextCallback, UserActions.makeTransition);
+                }
                 menu.AddSeparator("");
                 menu.AddItem(new GUIContent("Delete"), false, ContextCallback, UserActions.deleteNode);
             }
@@ -275,8 +287,9 @@ namespace SA.BehaviorEditor
             Color shadow = new Color(0, 0, 0, 0.06f);
             for (int i = 0; i < 3; i++)
             {
-                Handles.DrawBezier(startPos, endPos, startTan, endTan, curveColor, null, 1);
+                Handles.DrawBezier(startPos, endPos, startTan, endTan, curveColor, null, (i + 1) * 1f);
             }
+            Handles.DrawBezier(startPos, endPos, startTan, endTan, curveColor, null, 3);
         }
 
         public static void ClearWindowsFromList(List<BaseNode> l)

@@ -16,6 +16,7 @@ namespace SA.BehaviorEditor
         {
             if(b.stateRef.currentState == null)
             {
+                b.isAssigned = false;
                 EditorGUILayout.LabelField("Add State To Modify:");
             } else {
                 if(!b.collapse)
@@ -52,6 +53,7 @@ namespace SA.BehaviorEditor
             }
             if (b.stateRef.currentState != null)
             {
+                b.isAssigned = true;
                 SerializedObject serializedState = new SerializedObject(b.stateRef.currentState);
                 
                 ReorderableList onStateList;
@@ -86,7 +88,10 @@ namespace SA.BehaviorEditor
                     b.windowRect.height = standard;
 
                 }
-
+            }
+            else 
+            {
+                b.isAssigned = false;
             }
         }
 

@@ -17,6 +17,7 @@ namespace SA.BehaviorEditor
         public int targetNode;
         public bool isDuplicate;
         public string comment;
+        public bool isAssigned;
 
         public bool collapse;
         [HideInInspector]
