@@ -51,7 +51,10 @@ namespace SA.BehaviorEditor
         public State currentState;
         [HideInInspector]
         public State previousState;
-
+        public SerializedObject serializedState;
+        public ReorderableList onStateList;
+        public ReorderableList onEnterList;
+        public ReorderableList onExitList;
     }
     [System.Serializable]
     public class TransitionNodeReferences

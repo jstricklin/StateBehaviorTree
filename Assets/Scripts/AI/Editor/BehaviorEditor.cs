@@ -56,6 +56,14 @@ namespace SA.BehaviorEditor
             DrawWindows();
             if (e.type == EventType.MouseDrag)
             {
+                if (settings.currentGraph != null)
+                {
+                    settings.currentGraph.DeleteWindowsThatNeedTo();
+                    Repaint();
+                }
+            }
+            if (GUI.changed)
+            {
                 settings.currentGraph.DeleteWindowsThatNeedTo();
                 Repaint();
             }
@@ -68,6 +76,7 @@ namespace SA.BehaviorEditor
                 Repaint();
             }
         }
+
         void DrawWindows()
         {
             GUILayout.BeginArea(all, style);
@@ -250,10 +259,7 @@ namespace SA.BehaviorEditor
                     BaseNode stateNode = settings.AddNodeOnGraph(settings.stateNode, 200, 100, "State Node", mousePosition);
                     break;
                 case UserActions.addTransitionNode : 
-                    BaseNode transNode = settings.AddNodeOnGraph(settings.transitionNode, 200, 100, "Transition Node", mousePosition);
-                    transNode.enterNode = selectedNode.id;
-                    Transition transition = settings.stateNode.AddTransition(selectedNode);
-                    transNode.transRef.transitionId = transition.id;
+                    AddTransitionNode(selectedNode, mousePosition);
                     break;
                 case UserActions.commentNode :
                     BaseNode commentNode = settings.AddNodeOnGraph(settings.commentNode, 200, 100, "Comment", mousePosition);
@@ -261,6 +267,11 @@ namespace SA.BehaviorEditor
                     
                     break;
                 case UserActions.deleteNode :
+                if (selectedNode.drawNode is TransitionNode)
+                {
+                    BaseNode enterNode = settings.currentGraph.GetNodeWithIndex(selectedNode.enterNode);
+                    // enterNode.stateRef.currentState.RemoveTransition(selectedNode.transRef.transitionId);
+                }
                     settings.currentGraph.DeleteNode(selectedNode.id);
                     break;
                 case UserActions.makeTransition :
@@ -270,6 +281,25 @@ namespace SA.BehaviorEditor
             } 
             EditorUtility.SetDirty(settings);
         }
+
+        public static BaseNode AddTransitionNode(BaseNode enterNode, Vector3 pos)
+        {
+            BaseNode transNode = settings.AddNodeOnGraph(settings.transitionNode, 200, 100, "Condition", pos);
+            transNode.enterNode = enterNode.id;
+            Transition transition = settings.stateNode.AddTransition(enterNode);
+            transNode.transRef.transitionId = transition.id;
+            return transNode;
+        }
+
+        
+        public static BaseNode AddTransitionNodeFromTransition(Transition transition, BaseNode enterNode, Vector3 pos)
+        {
+            BaseNode transNode = settings.AddNodeOnGraph(settings.transitionNode, 200, 100, "Condition", pos);
+            transNode.enterNode = enterNode.id;
+            transNode.transRef.transitionId = transition.id;
+            return transNode;
+        }
+
 
         #endregion
         #region HelperMethods

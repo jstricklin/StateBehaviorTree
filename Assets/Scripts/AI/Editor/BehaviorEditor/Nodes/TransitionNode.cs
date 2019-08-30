@@ -25,11 +25,21 @@ namespace SA.BehaviorEditor
         public override void DrawWindow(BaseNode b)
         {
             EditorGUILayout.LabelField("");
-
             BaseNode enterNode = BehaviorEditor.settings.currentGraph.GetNodeWithIndex(b.enterNode);
-
+            if (enterNode == null)
+            {
+                return;
+            }
+            if (enterNode.stateRef.currentState == null)
+            {
+                BehaviorEditor.settings.currentGraph.DeleteNode(b.id);
+                return;
+            }
             Transition transition = enterNode.stateRef.currentState.GetTransition(b.transRef.transitionId);
-
+            if (transition == null)
+            {
+                return;
+            }
             transition.condition 
                 = (Condition)EditorGUILayout.ObjectField(transition.condition,
                 typeof(Condition), false);
@@ -45,10 +55,19 @@ namespace SA.BehaviorEditor
                 {
                     EditorGUILayout.LabelField("Duplicate Condition");
                 } else {
-                    // if (transition != null)
-                    // {
-                        // transition.disable = EditorGUILayout.Toggle("Disable", transition.disable);
-                    // }
+                    GUILayout.Label(transition.condition.description);
+                    BaseNode targetNode = BehaviorEditor.settings.currentGraph.GetNodeWithIndex(b.targetNode);
+                    if (targetNode != null)
+                    {
+                        if (!targetNode.isDuplicate)
+                        {
+                            transition.targetState = targetNode.stateRef.currentState;
+                        } else {
+                            transition.targetState = null;
+                        }
+                    } else {
+                        transition.targetState = null;
+                    }
                 } 
             }
             if (b.transRef.previousCondition != transition.condition)

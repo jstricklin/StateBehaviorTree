@@ -37,7 +37,10 @@ namespace SA
         }
         public void DeleteNode(int index)
         {
-            indexToDelete.Add(index);
+            if (!indexToDelete.Contains(index))
+            {
+                indexToDelete.Add(index);
+            }
             //different from vid below
             // DeleteWindowsThatNeedTo();
         }

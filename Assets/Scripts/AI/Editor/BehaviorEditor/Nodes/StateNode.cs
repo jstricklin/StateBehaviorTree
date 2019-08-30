@@ -36,55 +36,49 @@ namespace SA.BehaviorEditor
             if (b.stateRef.previousState != b.stateRef.currentState)
             {
                 b.isDuplicate = BehaviorEditor.settings.currentGraph.IsStateDuplicate(b);
-                if (b.isDuplicate)
-                {
-                    EditorGUILayout.LabelField("State is a duplicate");
-                    b.windowRect.height = 100;
-                    return;
-                }
+                b.stateRef.previousState = b.stateRef.currentState;
                 if (!b.isDuplicate)
                 {
-                    b.stateRef.previousState = b.stateRef.currentState;
+                    Vector3 pos = new Vector3(b.windowRect.x, b.windowRect.y, 0);
+                    pos.x += b.windowRect.width * 2;
+                    SetupReorderableLists(b);
+                    //  load transitions
                     for (int i = 0; i < b.stateRef.currentState.transitions.Count; i++)
                     {
-
+                        pos.y += i * 100;
+                        BehaviorEditor.AddTransitionNodeFromTransition(b.stateRef.currentState.transitions[i], b, pos);
                     }
                 }
+            }
+            if (b.isDuplicate)
+            {
+                EditorGUILayout.LabelField("State is a duplicate");
+                b.windowRect.height = 100;
+                return;
             }
             if (b.stateRef.currentState != null)
             {
                 b.isAssigned = true;
-                SerializedObject serializedState = new SerializedObject(b.stateRef.currentState);
-                
-                ReorderableList onStateList;
-                ReorderableList onEnterList;
-                ReorderableList onExitList;
 
-                // b.stateRef.serializedState = new SerializedObject(b.stateRef.currentState);
-                onStateList = new ReorderableList(serializedState, serializedState.FindProperty("onState"), true, true, true, true);
-                onEnterList = new ReorderableList(serializedState, serializedState.FindProperty("onEnter"), true, true, true, true);
-                onExitList = new ReorderableList(serializedState, serializedState.FindProperty("onExit"), true, true, true, true);
-
-                // if (b.stateRef.serializedState == null)
-                // {
-                // }
+                if (b.stateRef.serializedState == null)
+                {
+                    // in case unit has closed, will organize serialized list   
+                    SetupReorderableLists(b);
+                }
                 if (!b.collapse)
                 {
-                    serializedState.Update();
-                    HandleReordableList(onStateList, "On state");
-                    HandleReordableList(onEnterList, "On enter");
-                    HandleReordableList(onExitList, "On exit");
+                    b.stateRef.serializedState.Update();
 
                     EditorGUILayout.LabelField("");
-                    onStateList.DoLayoutList();
+                    b.stateRef.onStateList.DoLayoutList();
                     EditorGUILayout.LabelField("");
-                    onEnterList.DoLayoutList();
+                    b.stateRef.onEnterList.DoLayoutList();
                     EditorGUILayout.LabelField("");
-                    onExitList.DoLayoutList();
+                    b.stateRef.onExitList.DoLayoutList();
                     
-                    serializedState.ApplyModifiedProperties();
+                    b.stateRef.serializedState.ApplyModifiedProperties();
                     float standard = 300;
-                    standard += (onExitList.count + onStateList.count + onEnterList.count) * 20;
+                    standard += (b.stateRef.onExitList.count + b.stateRef.onStateList.count + b.stateRef.onEnterList.count) * 20;
                     b.windowRect.height = standard;
 
                 }
@@ -93,6 +87,20 @@ namespace SA.BehaviorEditor
             {
                 b.isAssigned = false;
             }
+        }
+
+        private void SetupReorderableLists(BaseNode b)
+        {
+            b.stateRef.serializedState = new SerializedObject(b.stateRef.currentState);
+
+            // b.stateRef.serializedState = new SerializedObject(b.stateRef.currentState);
+            b.stateRef.onStateList = new ReorderableList(b.stateRef.serializedState, b.stateRef.serializedState.FindProperty("onState"), true, true, true, true);
+            b.stateRef.onEnterList = new ReorderableList(b.stateRef.serializedState, b.stateRef.serializedState.FindProperty("onEnter"), true, true, true, true);
+            b.stateRef.onExitList = new ReorderableList(b.stateRef.serializedState, b.stateRef.serializedState.FindProperty("onExit"), true, true, true, true);
+
+            HandleReordableList(b.stateRef.onStateList, "On state");
+            HandleReordableList(b.stateRef.onEnterList, "On enter");
+            HandleReordableList(b.stateRef.onExitList, "On exit");
         }
 
         void HandleReordableList(ReorderableList list, string targetName)

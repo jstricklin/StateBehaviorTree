@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a0dc765a6cbd4767a01ab850b32b583, type: 3}
+  m_Name: Graph 1
+  m_EditorClassIdentifier: 
+  windows:
+  - id: 0
+    drawNode: {fileID: 11400000, guid: ed63d5341209e475bbc8323f5a77a533, type: 2}
+    windowRect:
+      serializedVersion: 2
+      x: 234
+      y: 462
+      width: 200
+      height: 100
+    windowTitle: Comment
+    enterNode: 0
+    targetNode: 0
+    isDuplicate: 0
+    comment: This be a comment. Yar!
+    isAssigned: 0
+    collapse: 0
+    previousCollapse: 0
+    stateRef:
+      currentState: {fileID: 0}
+      previousState: {fileID: 0}
+    transRef:
+      previousCondition: {fileID: 0}
+      transitionId: 0
+  - id: 1
+    drawNode: {fileID: 11400000, guid: dfff1413192ff417eb721f0c20da6b7f, type: 2}
+    windowRect:
+      serializedVersion: 2
+      x: 138
+      y: 100
+      width: 200
+      height: 300
+    windowTitle: State Node
+    enterNode: 0
+    targetNode: 0
+    isDuplicate: 0
+    comment: 
+    isAssigned: 1
+    collapse: 0
+    previousCollapse: 0
+    stateRef:
+      currentState: {fileID: 11400000, guid: ee46147b74768449aa7f8b89ae89394a, type: 2}
+      previousState: {fileID: 11400000, guid: ee46147b74768449aa7f8b89ae89394a, type: 2}
+    transRef:
+      previousCondition: {fileID: 0}
+      transitionId: 0
+  idCount: 9
