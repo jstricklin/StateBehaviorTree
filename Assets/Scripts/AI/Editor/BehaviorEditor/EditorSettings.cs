@@ -10,6 +10,7 @@ namespace SA.BehaviorEditor
         public BehaviorGraph currentGraph;
         public StateNode stateNode;
         public TransitionNode transitionNode;
+        public PortalNode portalNode;
         public CommentNode commentNode;
         public bool makeTransition;
         public GUISkin skin;

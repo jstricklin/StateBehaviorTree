@@ -121,9 +121,21 @@ namespace SA.BehaviorEditor
                     Rect endRect = target.windowRect;
                     endRect.x -= endRect.width * 0.5f;
                     Color targetColor = Color.green;
-                    if (!target.isAssigned || target.isDuplicate)
+                    if (target.drawNode is StateNode)
                     {
-                        targetColor = Color.red;
+                        if (!target.isAssigned || target.isDuplicate)
+                        {
+                            targetColor = Color.red;
+                        } 
+                    }
+                    else 
+                    {
+                        if (!target.isAssigned)
+                        {
+                            targetColor = Color.red;
+                        } else {
+                            targetColor = Color.yellow;
+                        }
                     }
                     Rect r = enter.windowRect;
                     BehaviorEditor.DrawNodeCurve(rect, endRect, false, targetColor);

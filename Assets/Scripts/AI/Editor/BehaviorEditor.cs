@@ -27,7 +27,8 @@ namespace SA.BehaviorEditor
             addTransitionNode,
             makeTransition,
             deleteNode,
-            commentNode
+            commentNode,
+            makePortal
         }
 
         #endregion
@@ -172,7 +173,7 @@ namespace SA.BehaviorEditor
             }
             if (clickedOnWindow)
             {
-                if (selectedNode.drawNode is StateNode)
+                if (selectedNode.drawNode is StateNode || selectedNode.drawNode is PortalNode)
                 {
                     if (selectedNode.id != transitFromId)
                     {
@@ -196,6 +197,7 @@ namespace SA.BehaviorEditor
             if (settings.currentGraph != null)
             {
                 menu.AddItem(new GUIContent("Add State"), false, ContextCallback, UserActions.addState);
+                menu.AddItem(new GUIContent("Add Portal"), false, ContextCallback, UserActions.makePortal);
                 menu.AddItem(new GUIContent("Add Comment"), false, ContextCallback, UserActions.commentNode);
 
             } else 
@@ -223,6 +225,12 @@ namespace SA.BehaviorEditor
                     menu.AddSeparator("");
                     menu.AddDisabledItem(new GUIContent("Add Condition"));
                     }
+                menu.AddSeparator("");
+                menu.AddItem(new GUIContent("Delete"), false, ContextCallback, UserActions.deleteNode);
+            }
+            if (selectedNode.drawNode is PortalNode)
+            {
+                PortalNode portalNode = (PortalNode)selectedNode.drawNode;
                 menu.AddSeparator("");
                 menu.AddItem(new GUIContent("Delete"), false, ContextCallback, UserActions.deleteNode);
             }
@@ -260,6 +268,9 @@ namespace SA.BehaviorEditor
                     break;
                 case UserActions.addTransitionNode : 
                     AddTransitionNode(selectedNode, mousePosition);
+                    break;
+                case UserActions.makePortal :
+                    BaseNode portalNode = settings.AddNodeOnGraph(settings.portalNode, 100, 50, "Portal Node", mousePosition);
                     break;
                 case UserActions.commentNode :
                     BaseNode commentNode = settings.AddNodeOnGraph(settings.commentNode, 200, 100, "Comment", mousePosition);
