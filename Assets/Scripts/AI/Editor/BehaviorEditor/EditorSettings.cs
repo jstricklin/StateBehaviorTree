@@ -14,6 +14,7 @@ namespace SA.BehaviorEditor
         public CommentNode commentNode;
         public bool makeTransition;
         public GUISkin skin;
+        public GUISkin activeSkin;
 
         public BaseNode AddNodeOnGraph(DrawNode type, float width, float height, string title, Vector3 pos)
         {

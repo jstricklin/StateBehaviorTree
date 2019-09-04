@@ -20,6 +20,9 @@ namespace SA.BehaviorEditor
         Rect mouseRect = new Rect(0,0,1,1);
         Rect all = new Rect(-5, -5, 10000, 10000);
         GUIStyle style;
+        GUIStyle activeStyle;
+        public static StateManager currentStateManager;
+        public StateManager previousStateManager;
 
         public enum UserActions 
         {
@@ -45,6 +48,7 @@ namespace SA.BehaviorEditor
         {
             settings = Resources.Load("EditorSettings") as EditorSettings;
             style = settings.skin.GetStyle("window");
+            activeStyle = settings.activeSkin.GetStyle("window");
         }
         #endregion
 
@@ -55,6 +59,15 @@ namespace SA.BehaviorEditor
             mousePosition = e.mousePosition;
             UserInput(e);
             DrawWindows();
+            if (Selection.activeTransform != null)
+            {
+                currentStateManager = Selection.activeTransform.GetComponentInChildren<StateManager>();
+                if (previousStateManager != currentStateManager)
+                {
+                    previousStateManager = currentStateManager;
+                    Repaint();
+                }
+            }
             if (e.type == EventType.MouseDrag)
             {
                 if (settings.currentGraph != null)
@@ -93,7 +106,23 @@ namespace SA.BehaviorEditor
                 }
                 for (int i = 0; i < settings.currentGraph.windows.Count; i++)
                 {
-                    settings.currentGraph.windows[i].windowRect = GUI.Window(i, settings.currentGraph.windows[i].windowRect, DrawNodeWindow, settings.currentGraph.windows[i].windowTitle);
+                    BaseNode b = settings.currentGraph.windows[i];
+                    if (b.drawNode is StateNode)
+                    {
+                        if (currentStateManager != null && b.stateRef.currentState == currentStateManager.currentState)
+                        {
+                            b.windowRect = GUI.Window(i, b.windowRect, DrawNodeWindow, b.windowTitle, activeStyle);
+                        }
+                        else 
+                        {
+                            b.windowRect = GUI.Window(i, b.windowRect,DrawNodeWindow, b.windowTitle);
+                        }
+                    }
+                    else 
+                    {
+                        // if NOT statenode
+                        b.windowRect = GUI.Window(i, b.windowRect, DrawNodeWindow, b.windowTitle);
+                    }
                 }
             }
             EndWindows();
