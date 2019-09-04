@@ -23,6 +23,7 @@ namespace SA.BehaviorEditor
         GUIStyle activeStyle;
         public static StateManager currentStateManager;
         public StateManager previousStateManager;
+        public static bool forceSetDirty;
 
         public enum UserActions 
         {
@@ -88,6 +89,20 @@ namespace SA.BehaviorEditor
                 Rect from = settings.currentGraph.GetNodeWithIndex(transitFromId).windowRect;
                 DrawNodeCurve(from, mouseRect,true,Color.blue);
                 Repaint();
+            }
+            if (forceSetDirty)           
+            {
+                forceSetDirty = false;
+                EditorUtility.SetDirty(settings);
+                EditorUtility.SetDirty(settings.currentGraph);
+                for (int i = 0; i < settings.currentGraph.windows.Count; i++)
+                {
+                    BaseNode n = settings.currentGraph.windows[i];
+                    if (n.stateRef.currentState != null)    
+                    {
+                        EditorUtility.SetDirty(n.stateRef.currentState);
+                    }
+                }
             }
         }
 
