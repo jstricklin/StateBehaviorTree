@@ -19,3 +19,4 @@ MonoBehaviour:
   commentNode: {fileID: 11400000, guid: ed63d5341209e475bbc8323f5a77a533, type: 2}
   makeTransition: 0
   skin: {fileID: 11400000, guid: 6d15b3b1d039e481ca07e0870ba8aba1, type: 2}
+  activeSkin: {fileID: 11400000, guid: 3cf1cb61582c14832bf0e15df1873976, type: 2}

@@ -48,6 +48,7 @@ namespace SA.BehaviorEditor
                         pos.y += i * 100;
                         BehaviorEditor.AddTransitionNodeFromTransition(b.stateRef.currentState.transitions[i], b, pos);
                     }
+                    BehaviorEditor.forceSetDirty = true;
                 }
             }
             if (b.isDuplicate)

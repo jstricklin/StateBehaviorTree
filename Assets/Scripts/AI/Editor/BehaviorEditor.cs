@@ -24,6 +24,7 @@ namespace SA.BehaviorEditor
         public static StateManager currentStateManager;
         public StateManager previousStateManager;
         public static bool forceSetDirty;
+        static State previousState;
 
         public enum UserActions 
         {
@@ -52,6 +53,18 @@ namespace SA.BehaviorEditor
             activeStyle = settings.activeSkin.GetStyle("window");
         }
         #endregion
+
+        private void Update()
+        {
+            if (currentStateManager != null)
+            {
+                if (previousState != currentStateManager.currentState)
+                {
+                    Repaint();
+                    previousState = currentStateManager.currentState;
+                }
+            }
+        }
 
         #region GUI Methods
         void OnGUI()
@@ -334,7 +347,7 @@ namespace SA.BehaviorEditor
                     settings.makeTransition = true;
                     break;
             } 
-            EditorUtility.SetDirty(settings);
+            forceSetDirty = true;
         }
 
         public static BaseNode AddTransitionNode(BaseNode enterNode, Vector3 pos)

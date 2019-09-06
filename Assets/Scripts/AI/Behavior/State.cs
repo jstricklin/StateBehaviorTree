@@ -11,6 +11,7 @@ namespace SA {
         public StateActions[] onExit;
 
         public int idCount;
+        [SerializeField]
         public List<Transition> transitions = new List<Transition>();
         
         public void OnEnter(StateManager states)

@@ -8,7 +8,10 @@ namespace SA
     [CreateAssetMenu]
     public class BehaviorGraph : ScriptableObject
     {
+        // serializefield on windows and idCount *may* not do anything - video creator never tested this
+        [SerializeField]
         public List<BaseNode> windows = new List<BaseNode>();
+        [SerializeField]
         public int idCount;
         List<int> indexToDelete = new List<int>();
         #region Checkers

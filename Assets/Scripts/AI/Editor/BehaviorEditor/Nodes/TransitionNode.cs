@@ -76,6 +76,8 @@ namespace SA.BehaviorEditor
                 b.isDuplicate = BehaviorEditor.settings.currentGraph.IsTransitionDuplicate(b);
                 if (!b.isDuplicate)
                 {
+                    // check if transition has changed, set dirty
+                    BehaviorEditor.forceSetDirty = true;
                     // BehaviorEditor.settings.currentGraph.SetNode(this);
                 }
             }
