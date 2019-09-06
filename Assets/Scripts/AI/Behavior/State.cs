@@ -6,9 +6,10 @@ namespace SA {
     [CreateAssetMenu]
     public class State : ScriptableObject
     {
-        public StateActions[] onState;
         public StateActions[] onEnter;
         public StateActions[] onExit;
+        public StateActions[] onFixed;
+        public StateActions[] onUpdate;
 
         public int idCount;
         [SerializeField]
@@ -22,7 +23,13 @@ namespace SA {
         public void Tick(StateManager states)
         {
 
-            ExectuteActions(states, onState);
+            ExectuteActions(states, onUpdate);
+            CheckTransitions(states);
+        }
+
+        public void FixedTick(StateManager states)
+        {
+            ExectuteActions(states, onFixed);
         }
         
         public void OnExit(StateManager states)

@@ -71,15 +71,17 @@ namespace SA.BehaviorEditor
                     b.stateRef.serializedState.Update();
 
                     EditorGUILayout.LabelField("");
-                    b.stateRef.onStateList.DoLayoutList();
+                    b.stateRef.onUpdateList.DoLayoutList();
+                    EditorGUILayout.LabelField("");
+                    b.stateRef.onFixedList.DoLayoutList();
                     EditorGUILayout.LabelField("");
                     b.stateRef.onEnterList.DoLayoutList();
                     EditorGUILayout.LabelField("");
                     b.stateRef.onExitList.DoLayoutList();
                     
                     b.stateRef.serializedState.ApplyModifiedProperties();
-                    float standard = 300;
-                    standard += (b.stateRef.onExitList.count + b.stateRef.onStateList.count + b.stateRef.onEnterList.count) * 20;
+                    float standard = 375;
+                    standard += (b.stateRef.onExitList.count + b.stateRef.onFixedList.count + b.stateRef.onUpdateList.count + b.stateRef.onEnterList.count) * 20;
                     b.windowRect.height = standard;
 
                 }
@@ -95,11 +97,13 @@ namespace SA.BehaviorEditor
             b.stateRef.serializedState = new SerializedObject(b.stateRef.currentState);
 
             // b.stateRef.serializedState = new SerializedObject(b.stateRef.currentState);
-            b.stateRef.onStateList = new ReorderableList(b.stateRef.serializedState, b.stateRef.serializedState.FindProperty("onState"), true, true, true, true);
+            b.stateRef.onUpdateList = new ReorderableList(b.stateRef.serializedState, b.stateRef.serializedState.FindProperty("onUpdate"), true, true, true, true);
+            b.stateRef.onFixedList = new ReorderableList(b.stateRef.serializedState, b.stateRef.serializedState.FindProperty("onFixed"), true, true, true, true);
             b.stateRef.onEnterList = new ReorderableList(b.stateRef.serializedState, b.stateRef.serializedState.FindProperty("onEnter"), true, true, true, true);
             b.stateRef.onExitList = new ReorderableList(b.stateRef.serializedState, b.stateRef.serializedState.FindProperty("onExit"), true, true, true, true);
 
-            HandleReordableList(b.stateRef.onStateList, "On state");
+            HandleReordableList(b.stateRef.onUpdateList, "On update");
+            HandleReordableList(b.stateRef.onFixedList, "On fixed");
             HandleReordableList(b.stateRef.onEnterList, "On enter");
             HandleReordableList(b.stateRef.onExitList, "On exit");
         }

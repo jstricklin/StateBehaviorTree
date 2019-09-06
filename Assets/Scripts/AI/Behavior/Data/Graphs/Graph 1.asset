@@ -35,26 +35,4 @@ MonoBehaviour:
     transRef:
       previousCondition: {fileID: 0}
       transitionId: 0
-  - id: 1
-    drawNode: {fileID: 11400000, guid: dfff1413192ff417eb721f0c20da6b7f, type: 2}
-    windowRect:
-      serializedVersion: 2
-      x: 138
-      y: 100
-      width: 200
-      height: 300
-    windowTitle: State Node
-    enterNode: 0
-    targetNode: 0
-    isDuplicate: 0
-    comment: 
-    isAssigned: 1
-    collapse: 0
-    previousCollapse: 0
-    stateRef:
-      currentState: {fileID: 11400000, guid: ee46147b74768449aa7f8b89ae89394a, type: 2}
-      previousState: {fileID: 11400000, guid: ee46147b74768449aa7f8b89ae89394a, type: 2}
-    transRef:
-      previousCondition: {fileID: 0}
-      transitionId: 0
-  idCount: 9
+  idCount: 10
