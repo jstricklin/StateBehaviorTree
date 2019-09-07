@@ -21,6 +21,8 @@ namespace SA.BehaviorEditor
         Rect all = new Rect(-5, -5, 10000, 10000);
         GUIStyle style;
         GUIStyle activeStyle;
+        Vector2 scrollPos;
+        Vector2 scrollStartPos;
         public static StateManager currentStateManager;
         public StateManager previousStateManager;
         public static bool forceSetDirty;
@@ -33,7 +35,8 @@ namespace SA.BehaviorEditor
             makeTransition,
             deleteNode,
             commentNode,
-            makePortal
+            makePortal,
+            resetPanning
         }
 
         #endregion
@@ -176,11 +179,33 @@ namespace SA.BehaviorEditor
                     RightClick(e);
                 }
             }
-            if (e.button == 0 && !settings.makeTransition)
+            // scroll below
+            if (e.button == 0 && !settings.makeTransition || e.button == 2)
             {
-                if (e.type == EventType.MouseDown)
+                if (e.button == 0)
                 {
-                    // LeftClick(e);
+                    clickedOnWindow = false;
+                    for (int i = 0; i < settings.currentGraph.windows.Count; i++)
+                    {
+                        if (settings.currentGraph.windows[i].windowRect.Contains(e.mousePosition))
+                        {
+                            clickedOnWindow = true;
+                        }
+                    }
+                }
+                if (e.button == 0 && !clickedOnWindow || e.button == 2)
+                {
+                    if (e.type == EventType.MouseDown)
+                    {
+                        // LeftClick(e);
+                        scrollStartPos = e.mousePosition;
+                    } else if (e.type == EventType.MouseDrag)
+                    {
+                        HandlePanning(e);
+                    } else if (e.type == EventType.MouseUp)
+                    {
+
+                    }
                 }
             }
             if (e.button == 0 && settings.makeTransition)
@@ -189,6 +214,31 @@ namespace SA.BehaviorEditor
                 {
                     MakeTransition();
                 }
+            }
+        }
+
+        void ResetPanning()
+        {
+            for (int i = 0; i < settings.currentGraph.windows.Count; i++)
+            {
+                BaseNode b = settings.currentGraph.windows[i];
+                b.windowRect.x -= scrollPos.x;
+                b.windowRect.y -= scrollPos.y;
+            }
+            scrollPos = Vector2.zero;
+        }
+        void HandlePanning(Event e)
+        {
+            Vector2 diff = e.mousePosition - scrollStartPos;
+            diff *= 0.6f;
+            scrollStartPos  = e.mousePosition;
+            scrollPos += diff;
+
+            for (int i = 0; i < settings.currentGraph.windows.Count; i++)
+            {
+                BaseNode b = settings.currentGraph.windows[i];
+                b.windowRect.x += diff.x;
+                b.windowRect.y += diff.y;
             }
         }
 
@@ -256,6 +306,8 @@ namespace SA.BehaviorEditor
                 menu.AddItem(new GUIContent("Add State"), false, ContextCallback, UserActions.addState);
                 menu.AddItem(new GUIContent("Add Portal"), false, ContextCallback, UserActions.makePortal);
                 menu.AddItem(new GUIContent("Add Comment"), false, ContextCallback, UserActions.commentNode);
+                menu.AddSeparator("");
+                menu.AddItem(new GUIContent("Reset Panning"), false, ContextCallback, UserActions.resetPanning);
 
             } else 
             {
@@ -332,7 +384,6 @@ namespace SA.BehaviorEditor
                 case UserActions.commentNode :
                     BaseNode commentNode = settings.AddNodeOnGraph(settings.commentNode, 200, 100, "Comment", mousePosition);
                     commentNode.comment = "This is a comment";
-                    
                     break;
                 case UserActions.deleteNode :
                 if (selectedNode.drawNode is TransitionNode)
@@ -345,6 +396,9 @@ namespace SA.BehaviorEditor
                 case UserActions.makeTransition :
                     transitFromId = selectedNode.id;
                     settings.makeTransition = true;
+                    break;
+                case UserActions.resetPanning :
+                    ResetPanning();
                     break;
             } 
             forceSetDirty = true;
